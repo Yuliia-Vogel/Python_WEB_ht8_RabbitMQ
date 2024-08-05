@@ -13,7 +13,7 @@ def main():
     for contact in contacts:
         message = str(contact.id)
         channel.basic_publish(exchange='', routing_key='email_sending', body=message.encode())
-        print(f" [x] Sent {message}")
+        print(f" [x] Sent {message} to {contact}")
     
     connection.close()
 

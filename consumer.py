@@ -1,5 +1,7 @@
+import sys
+
 import pika
-from models import Contact
+from models import Contacts
 from bson.objectid import ObjectId
 
 def send_email_stub(contact):
@@ -15,11 +17,14 @@ def main():
 
     def callback(ch, method, properties, body):
         contact_id = body.decode()
-        contact = Contact.objects(id=ObjectId(contact_id)).first()
+        contact = Contacts.objects(id=ObjectId(contact_id)).first()
         if contact and not contact.email_sent:
             send_email_stub(contact)
-            contact.update(email_sent=True)
-            print(f" [x] Processed and updated contact {contact_id}")
+            contact.update(email_sent=True) # змінюємо значення логічного поле на True
+            contact.save() # зберігаємо зміни в базі на МонгоДБ
+            contact.reload() # перезавантажуємо дані з бази, щоб роздрукувати і побачити, що цільове поле змінилося
+            print(f" [x] Processed and updated contact id {contact_id}")
+            print(contact) # власне в цьому прінті має бути видно, що логічне поле тепер Тру
 
     channel.basic_consume(queue='email_sending', on_message_callback=callback, auto_ack=True)
 
@@ -27,4 +32,8 @@ def main():
     channel.start_consuming()
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Keyboard Interrupted")
+        sys.exit(0)
