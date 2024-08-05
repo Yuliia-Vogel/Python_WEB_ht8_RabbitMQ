@@ -6,9 +6,9 @@
 
 3. VSCode: python -m venv venv і запустити venv
 
-4. pip install pika pymongo[tls] mongoengine faker
+4. pip install pika pymongo[tls] mongoengine faker python-dotenv
 
-5. cloud.mongodb.com - створити свій кластер і створити свій УРІ в файл .env
+5. cloud.mongodb.com - створити свій кластер, і створити свій УРІ і бажану назву бази у файл .env
 
 6. Запускаємо producer.py в одному терміналі: створюється база з 10 клієнтів і віжправляються їхні айді до RabbitMQ. Можна сходити в базу MongoDB і перевірити, чи створилась колекція "contacts", чи є там 10 створених контактів і чи стправді поле "email_sent" зараз встановлено "False".
 
